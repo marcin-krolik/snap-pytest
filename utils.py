@@ -44,7 +44,7 @@ def _download_binary(binary):
         if not os.path.isdir(binary.dir):
             _ensure_dir(binary.dir)
         fname, headers = f.retrieve(binary.url, os.path.join(binary.dir, os.path.basename(binary.url)))
-        os.chmod(fname, 755)
+        os.chmod(fname, 0755)
         log.debug("chmod set to 755 for {}".format(fname))
     except IOError as e:
         log.error(e.args)
