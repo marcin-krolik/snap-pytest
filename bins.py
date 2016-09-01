@@ -24,13 +24,6 @@ import time
 
 from logger import log
 
-PLUGIN_DIR = "/etc/snap/plugins"
-SNAP_DIR = "/usr/local/bin"
-
-PLUGIN_URL = "http://snap.ci.snap-telemetry.io/plugin/build/latest/snap-plugin-collector-psutil"
-SNAP_URL = "http://snap.ci.snap-telemetry.io/snap/master/latest/snapd"
-SNAPCTL_URL = "http://snap.ci.snap-telemetry.io/snap/master/latest/snapctl"
-
 
 def _non_block_read(output):
     fd = output.fileno()
@@ -131,7 +124,7 @@ class Snapctl(Binary):
         self.errors = []
 
     def load_plugin(self, plugin):
-        cmd = '{} plugin load {}'.format(os.path.join(self.dir, self.name), os.path.join(PLUGIN_DIR, plugin))
+        cmd = '{} plugin load {}'.format(os.path.join(self.dir, self.name), os.path.join(plugin.dir, plugin.name))
         log.debug("snapctl load plugin {}".format(cmd))
         out = self._start_process(cmd)
         log.debug("plugin loaded? {}".format("Plugin loaded" in out))

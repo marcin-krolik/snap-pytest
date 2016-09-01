@@ -17,8 +17,8 @@
 
 import urllib
 import errno
+import os
 
-from bins import *
 from logger import log
 
 
@@ -26,14 +26,6 @@ def download_binaries(bins):
     for binary in bins.get_all_bins():
         log.debug("Downloading {} to {}".format(binary.url, binary.dir))
         _download_binary(binary)
-
-
-def set_binaries():
-    bins = Binaries()
-    bins.snapd = Snapd(SNAP_URL, SNAP_DIR)
-    bins.snapctl = Snapctl(SNAPCTL_URL, SNAP_DIR)
-    bins.plugins = [Binary(PLUGIN_URL, PLUGIN_DIR)]
-    return bins
 
 
 def _ensure_dir(dirname):
