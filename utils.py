@@ -24,7 +24,7 @@ from logger import log
 
 def download_binaries(bins):
     for binary in bins.get_all_bins():
-        log.debug("Downloading {} to {}".format(binary.url, binary.dir))
+        log.info("Downloading {} to {}".format(binary.url, binary.dir))
         _download_binary(binary)
 
 

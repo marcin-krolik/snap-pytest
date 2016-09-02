@@ -16,16 +16,18 @@
 #limitations under the License.
 
 import logging
+import os
 
 
 def setup_custom_logger(name):
-    formatter = logging.Formatter(fmt='%(asctime)s - %(levelname)s - %(module)s - %(message)s')
+    formatter = logging.Formatter(fmt='%(asctime)s [ %(levelname)s ] %(message)s', datefmt="%Y-%m-%d %H:%M:%S")
 
     handler = logging.StreamHandler()
     handler.setFormatter(formatter)
 
     logger = logging.getLogger(name)
-    logger.setLevel(logging.DEBUG)
+    log_lvl = os.environ.get('LARGE_TEST_DEBUG_LVL', 'INFO')
+    logger.setLevel(log_lvl)
     logger.addHandler(handler)
     return logger
 

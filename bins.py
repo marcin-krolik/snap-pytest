@@ -71,6 +71,34 @@ class Binary(object):
         return self._name
 
 
+class Plugin(Binary):
+
+    def __init__(self, url, location, plg_type, version):
+        super(Plugin, self).__init__(url, location)
+        self._plg_type = plg_type
+        self._version = version
+        self.plg_name = os.path.basename(self.name.replace("-", os.sep))
+
+    @property
+    def plg_type(self):
+        return self._plg_type
+
+    @plg_type.setter
+    def plg_type(self, t):
+        self._plg_type = t
+
+    @property
+    def version(self):
+        return self._version
+
+    @version.setter
+    def version(self, v):
+        self._version = v
+
+    def __str__(self):
+        return ":".join([self.plg_type, self.plg_name, str(self.version)])
+
+
 class Snapd(Binary, threading.Thread):
 
     def __init__(self, url, location):
@@ -130,8 +158,8 @@ class Snapctl(Binary):
         log.debug("plugin loaded? {}".format("Plugin loaded" in out))
         return "Plugin loaded" in out
 
-    def unload_plugin(self, plugin_type, plugin_name, plugin_version):
-        cmd = '{} plugin unload {}:{}:{}'.format(os.path.join(self.dir, self.name), plugin_type, plugin_name, plugin_version)
+    def unload_plugin(self, plugin):
+        cmd = '{} plugin unload {}:{}:{}'.format(os.path.join(self.dir, self.name), plugin.plg_type, plugin.plg_name, plugin.version)
         log.debug("snapctl unload plugin {}".format(cmd))
         out = self._start_process(cmd)
         log.debug("plugin unloaded? {}".format("Plugin unloaded" in out))
@@ -227,36 +255,57 @@ class Binaries(object):
     def __init__(self):
         self._snapd = None
         self._snapctl = None
-        self._plugins = []
+        self._collector = None
+        self._publisher = None
+        self._processor = None
 
     @property
     def snapd(self):
         return self._snapd
 
     @snapd.setter
-    def snapd(self, bin):
-        self._snapd = bin
+    def snapd(self, s):
+        self._snapd = s
 
     @property
     def snapctl(self):
         return self._snapctl
 
     @snapctl.setter
-    def snapctl(self, bin):
-        self._snapctl = bin
+    def snapctl(self, s):
+        self._snapctl = s
 
     @property
-    def plugins(self):
-        return self._plugins
+    def collector(self):
+        return self._collector
 
-    @plugins.setter
-    def plugins(self, bins):
-        self._plugins = bins
+    @collector.setter
+    def collector(self, c):
+        self._collector = c
+
+    @property
+    def processor(self):
+        return self._processor
+
+    @processor.setter
+    def processor(self, p):
+        self._processor = p
+
+    @property
+    def publisher(self):
+        return self._publisher
+
+    @publisher.setter
+    def publisher(self, p):
+        self._publisher = p
 
     def get_all_bins(self):
-        all_bins = [self.snapd, self.snapctl]
-        all_bins.extend(self._plugins)
+        all_bins = [self.snapd, self.snapctl, self.collector, self.processor, self.publisher]
         return all_bins
+
+    def get_all_plugins(self):
+        all_plugins = [self.collector, self.processor, self.publisher]
+        return all_plugins
 
     def __str__(self):
         return ";".join(map(lambda e: e.name, self.get_all_bins()))
