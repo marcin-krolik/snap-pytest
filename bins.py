@@ -224,7 +224,7 @@ class Snapctl(Binary):
         out = self._start_process(cmd).split('\n')
         if len(out) < 8:
             return []
-        out = out[7:]
+        out = out[5:]
         headers = map(lambda e: e.replace(" ", ""), filter(lambda e: e != "", out[0].split('\t')))
         rules = []
         for o in out[1:]:
@@ -301,11 +301,11 @@ class Binaries(object):
 
     def get_all_bins(self):
         all_bins = [self.snapd, self.snapctl, self.collector, self.processor, self.publisher]
-        return all_bins
+        return filter(lambda b: b, all_bins)
 
     def get_all_plugins(self):
         all_plugins = [self.collector, self.processor, self.publisher]
-        return all_plugins
+        return filter(lambda p: p, all_plugins)
 
     def __str__(self):
         return ";".join(map(lambda e: e.name, self.get_all_bins()))
