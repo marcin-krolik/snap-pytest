@@ -216,7 +216,7 @@ class Snapctl(Binary):
         cmd = '{} metric list'.format(os.path.join(self.dir, self.name))
         log.debug("snapctl metric list")
         metrics = self._start_process(cmd).split('\n')[1:-1]
-        return metrics
+        return filter(lambda e: e,  metrics)
     
     def metric_get(self, metric):
         cmd = '{} metric get -m {}'.format(os.path.join(self.dir, self.name), metric)
