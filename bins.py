@@ -159,7 +159,7 @@ class Snapctl(Binary):
         return "Plugin loaded" in out
 
     def unload_plugin(self, plugin):
-        cmd = '{} plugin unload {}:{}:{}'.format(os.path.join(self.dir, self.name), plugin.plg_type, plugin.plg_name, plugin.version)
+        cmd = '{} plugin unload {} {} {}'.format(os.path.join(self.dir, self.name), plugin.plg_type, plugin.plg_name, plugin.version)
         log.debug("snapctl unload plugin {}".format(cmd))
         out = self._start_process(cmd)
         log.debug("plugin unloaded? {}".format("Plugin unloaded" in out))
